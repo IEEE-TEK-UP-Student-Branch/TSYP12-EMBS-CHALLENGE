@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - ment.AI{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-highlight mb-4">Notifications</h1>
+        <div class="flex items-center justify-between">
+            <div class="flex space-x-4">
+                <a href="?filter=all" class="px-4 py-2 rounded-lg {% if filter == 'all' %}bg-highlight text-white{% else %}text-gray-400 hover:text-highlight{% endif %}">
+                    All
+                </a>
+                <a href="?filter=unread" class="px-4 py-2 rounded-lg {% if filter == 'unread' %}bg-highlight text-white{% else %}text-gray-400 hover:text-highlight{% endif %}">
+                    Unread
+                </a>
+                <a href="?filter=read" class="px-4 py-2 rounded-lg {% if filter == 'read' %}bg-highlight text-white{% else %}text-gray-400 hover:text-highlight{% endif %}">
+                    Read
+                </a>
+            </div>
+            {% if has_unread %}
+            <form method="POST" action="{% url 'mark_all_notifications_read' %}" class="inline">
+                {% csrf_token %}
+                <button type="submit" class="text-sm text-highlight hover:text-highlight-light">
+                    Mark all as read
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="space-y-4">
+        {% if notifications %}
+            {% for notification in notifications %}
+                <div class="bg-dark-lighter rounded-lg p-4 border border-dark-darker {% if not notification.is_read %}relative{% endif %}">
+                    {% if not notification.is_read %}
+                        <div class="absolute top-4 right-4 w-2 h-2 bg-highlight rounded-full"></div>
+                    {% endif %}
+                    <a href="{{ notification.link }}" class="block hover:bg-dark-darker transition-colors -m-4 p-4">
+                        <h3 class="font-medium text-lg mb-2">{{ notification.title }}</h3>
+                        <p class="text-gray-400 mb-2">{{ notification.message }}</p>
+                        <p class="text-xs text-gray-500">{{ notification.created_at|timesince }} ago</p>
+                    </a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="text-center py-12 text-gray-400">
+                <p class="text-lg">No notifications found</p>
+                {% if filter != 'all' %}
+                    <a href="?filter=all" class="text-highlight hover:text-highlight-light text-sm mt-2 inline-block">View all notifications</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

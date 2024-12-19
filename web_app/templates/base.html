@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ment.AI{% endblock %}</title>
+    {% load static %}
+    {% load compress %}
+   
+    {% compress css %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% endcompress %}
+   
+    <script defer src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+    
+    <script>
+        function notificationManager() {
+            return {
+                notifications: [],
+                unreadCount: 0,
+
+                loadNotifications() {
+                    fetch('/api/notifications/')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.notifications = data;
+                            this.unreadCount = data.filter(n => !n.is_read).length;
+                        });
+                }
+            }
+        }
+    </script>
+</head>
+<body class="h-full bg-dark text-gray-200 flex flex-col min-h-screen" x-data="notificationManager()" x-init="loadNotifications()">
+    {% csrf_token %}
+    <!-- Navigation -->
+    <nav class="bg-dark-lighter border-b border-dark-darker">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="flex items-center group">
+                        <span class="text-xl font-semibold text-highlight group-hover:text-highlight-light transition-colors">ment.AI</span>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-6">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'dashboard' %}" class="text-gray-300 hover:text-highlight transition-colors">Dashboard</a>
+                        <a href="{% url 'chat' %}" class="text-gray-300 hover:text-highlight transition-colors">Chat</a>
+                        <!-- Notification Button -->
+                        <a href="{% url 'notifications' %}?filter=unread" class="text-gray-300 hover:text-highlight transition-colors">
+                            <span x-show="unreadCount > 0">Notifications(<span x-text="unreadCount"></span>)</span>
+                            <span x-show="unreadCount === 0">Notifications</span>
+                        </a>
+                        <form action="{% url 'logout' %}" method="post" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-gray-300 hover:text-highlight transition-colors">Logout</button>
+                        </form>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-gray-300 hover:text-highlight transition-colors">Login</a>
+                        <a href="{% url 'register' %}" class="btn-primary">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark-lighter border-t border-dark-darker mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col items-center justify-center space-y-4">
+                <p class="text-gray-400 text-lg">&copy; 2024 ment.AI. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

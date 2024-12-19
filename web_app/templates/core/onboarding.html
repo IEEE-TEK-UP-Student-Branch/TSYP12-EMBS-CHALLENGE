@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - Tell Us About Yourself{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-dark-lighter rounded-lg shadow-lg p-8 border border-dark-darker">
+        <h1 class="text-3xl font-bold text-highlight mb-6">Welcome to ment.AI</h1>
+        
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- User Preferences -->
+            <div class="space-y-4">
+                <div>
+                    <label for="preferred_name" class="block text-sm font-medium text-gray-300 mb-1">
+                        What would you like to be called?
+                    </label>
+                    <input type="text" 
+                           name="preferred_name" 
+                           id="preferred_name"
+                           class="form-input w-full bg-dark-darker text-gray-200 border-gray-700 rounded-lg focus:ring-accent focus:border-accent"
+                           placeholder="Your preferred name">
+                </div>
+
+                <div>
+                    <label for="struggling_with" class="block text-sm font-medium text-gray-300 mb-1">
+                        What are you currently struggling with? (Optional)
+                    </label>
+                    <select name="struggling_with" 
+                            id="struggling_with"
+                            class="form-select w-full bg-dark-darker text-gray-200 border-gray-700 rounded-lg focus:ring-accent focus:border-accent">
+                        <option value="">Choose an option...</option>
+                        <option value="anxiety">Anxiety</option>
+                        <option value="stress">Stress</option>
+                        <option value="sleep">Sleep</option>
+                        <option value="depression">Depression</option>
+                        <option value="selfcare">Self Care</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="pt-6">
+                <button type="submit" 
+                        class="w-full btn-primary">
+                    Start Your Journey
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

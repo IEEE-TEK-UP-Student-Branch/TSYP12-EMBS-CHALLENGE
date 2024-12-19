@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat with Momo{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-8 space-y-10">
+    <div class="card">
+        <!-- Chat Header -->
+        <div class="p-6 border-b border-dark-lighter">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <!-- AI Initial Circle -->
+                    <div class="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                        <span class="text-accent text-lg font-medium">M</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-semibold text-highlight">Momo</h1>
+                        {% if topic %}
+                        <p class="text-sm text-gray-400">Discussing: {{ topic|title }}</p>
+                        {% else %}
+                        <p class="text-sm text-gray-400">Your mental health companion</p>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    {% if topic %}
+                    <a href="{% url 'topic_page' topic %}" 
+                       class="text-accent hover:text-accent/80 text-sm">
+                        View Resources
+                    </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'dashboard' %}" class="btn-secondary">
+                        Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="chat-messages" class="p-6 space-y-6 min-h-[500px] max-h-[600px] overflow-y-auto">
+            <!-- Welcome Message -->
+            {% if not messages %}
+            <div class="flex justify-start mb-4">
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center">
+                        <span class="text-accent text-sm font-medium">M</span>
+                    </div>
+                    <div class="flex flex-col max-w-[80%]">
+                        <div class="bg-dark-darker rounded-lg p-4 w-full">
+                            <p class="text-gray-300">
+                                Hello{% if user.userprofile.preferred_name %}, {{ user.userprofile.preferred_name }}{% endif %}! 
+                                I'm Momo. How are you feeling today?
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Message History -->
+            {% for message in messages %}
+                {% if message.is_ai %}
+                    {% include 'core/chat_snippets/ai_message.html' with message=message ai_companion="Momo" %}
+                {% else %}
+                    {% include 'core/chat_snippets/user_message.html' with message=message %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <!-- Message Input -->
+        <div class="p-6 border-t border-dark-lighter">
+            <form hx-post="{% url 'chat_message' %}"
+                  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                  hx-target="#chat-messages"
+                  hx-swap="none"
+                  class="flex space-x-4"
+                  id="chat-form">
+                {% csrf_token %}
+                <input type="text" 
+                       name="message" 
+                       class="flex-1 bg-dark border border-dark-lighter rounded-lg px-4 py-3 text-gray-200 focus:outline-none focus:border-accent"
+                       placeholder="Type your message..."
+                       required>
+                <button type="submit" 
+                        class="btn-primary flex items-center space-x-2">
+                    <span>Send</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('htmx:afterRequest', function(evt) {
+    if (evt.detail.target.id === 'chat-messages' && evt.detail.successful) {
+        const response = JSON.parse(evt.detail.xhr.response);
+        if (response.status === 'success') {
+            // Append each message
+            response.messages.forEach(msg => {
+                evt.detail.target.insertAdjacentHTML('beforeend', msg.html);
+            });
+            // Scroll to bottom and reset form
+            evt.detail.target.scrollTop = evt.detail.target.scrollHeight;
+            document.querySelector('#chat-form').reset();
+        }
+    }
+});
+
+// Scroll to bottom on page load
+window.onload = function() {
+    var messages = document.getElementById('chat-messages');
+    messages.scrollTop = messages.scrollHeight;
+}
+</script>
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to ment.AI{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-8 space-y-10">
+    <h1 class="text-4xl font-bold text-highlight mb-8">Your Personal Mental Health Companion</h1>
+    <p class="text-xl text-gray-300 mb-12">Experience compassionate support and guidance through our AI-powered mental health platform.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="card p-6">
+            <div class="text-accent text-3xl mb-4">🌟</div>
+            <h3 class="text-lg font-semibold text-highlight mb-3">24/7 Support</h3>
+            <p class="text-gray-300">Access caring and understanding support whenever you need it.</p>
+        </div>
+        <div class="card p-6">
+            <div class="text-accent text-3xl mb-4">🎯</div>
+            <h3 class="text-lg font-semibold text-highlight mb-3">Personalized Care</h3>
+            <p class="text-gray-300">Receive guidance tailored to your unique needs and experiences.</p>
+        </div>
+        <div class="card p-6">
+            <div class="text-accent text-3xl mb-4">🤝</div>
+            <h3 class="text-lg font-semibold text-highlight mb-3">Safe Space</h3>
+            <p class="text-gray-300">Share your thoughts in a private, judgment-free environment.</p>
+        </div>
+    </div>
+
+    {% if not user.is_authenticated %}
+    <div class="space-x-4">
+        <a href="{% url 'register' %}" class="btn-primary inline-block">Get Started</a>
+        <a href="{% url 'login' %}" class="link">Already have an account?</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

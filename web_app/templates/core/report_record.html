@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Record Report{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-dark-lighter rounded-lg shadow-lg p-8 border border-dark-darker">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold mb-3 text-highlight">Record Your Report</h1>
+            <p class="text-gray-400">{{ report.title }}</p>
+        </div>
+
+        <div class="mb-8">
+            <div id="video-preview" class="relative aspect-video bg-dark rounded-lg overflow-hidden">
+                <video id="video-element" class="hidden w-full h-full object-cover" autoplay playsinline></video>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center space-x-4">
+            <button id="start-recording" class="btn-primary px-6">Start Recording</button>
+            <button id="submit-report" class="hidden btn-primary px-6" disabled>Submit</button>
+            <div id="recording-timer" class="hidden flex items-center space-x-2 text-gray-400 ml-4">
+                <div class="w-2 h-2 rounded-full bg-red-500"></div>
+                <span id="timer" class="font-mono">00:00</span>
+            </div>
+        </div>
+
+        <script>
+            let mediaRecorder;
+            let recordedChunks = [];
+            let startTime;
+            let timerInterval;
+            let hasRecordedContent = false;
+
+            document.getElementById('start-recording').addEventListener('click', async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: {
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 }
+                        }, 
+                        audio: true 
+                    });
+                    
+                    document.getElementById('video-element').srcObject = stream;
+                    document.getElementById('video-element').classList.remove('hidden');
+                    document.getElementById('start-recording').classList.add('hidden');
+                    document.getElementById('recording-timer').classList.remove('hidden');
+                    
+                    mediaRecorder = new MediaRecorder(stream);
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                            hasRecordedContent = true;
+                            document.getElementById('submit-report').removeAttribute('disabled');
+                        }
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        if (hasRecordedContent) {
+                            document.getElementById('submit-report').classList.remove('hidden');
+                        }
+                        document.getElementById('recording-timer').classList.add('hidden');
+                    };
+                    
+                    // Request data every second for smoother recording
+                    mediaRecorder.start(1000);
+                    startTime = Date.now();
+                    updateTimer();
+                    timerInterval = setInterval(updateTimer, 1000);
+                    
+                } catch (err) {
+                    console.error('Error accessing camera:', err);
+                    alert('Error accessing camera. Please make sure you have granted camera permissions.');
+                }
+            });
+
+            document.getElementById('submit-report').addEventListener('click', async () => {
+                if (!hasRecordedContent) {
+                    alert('Please record some content before submitting.');
+                    return;
+                }
+
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                    clearInterval(timerInterval);
+                    
+                    const tracks = document.getElementById('video-element').srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                }
+
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                const formData = new FormData();
+                formData.append('video', blob, 'report.webm');
+                
+                try {
+                    const response = await fetch(window.location.href, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        alert(data.message || 'Error submitting report');
+                    }
+                } catch (err) {
+                    console.error('Error submitting report:', err);
+                    alert('Error submitting report. Please try again.');
+                }
+            });
+
+            function updateTimer() {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const seconds = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+            }
+        </script>
+    </div>
+</div>
+{% endblock %}

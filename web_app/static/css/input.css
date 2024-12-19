@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    /* Custom scrollbar for webkit browsers */
+    ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        @apply bg-dark;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        @apply bg-dark-lighter rounded-full;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        @apply bg-highlight/20;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply bg-accent text-dark font-medium px-4 py-2 rounded-lg 
+               hover:bg-accent-light active:bg-accent-dark
+               transform transition-all duration-200 
+               focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-dark;
+    }
+    
+    .btn-secondary {
+        @apply bg-dark-lighter text-gray-200 px-4 py-2 rounded-lg
+               hover:bg-dark-lighter hover:text-highlight
+               transform transition-all duration-200
+               border border-dark-darker hover:border-highlight/30
+               focus:outline-none focus:ring-2 focus:ring-highlight/50 focus:ring-offset-2 focus:ring-offset-dark;
+    }
+
+    .btn-mood {
+        @apply w-full py-3 px-4 flex items-center justify-center gap-2
+               bg-dark-darker text-gray-300 rounded-lg
+               hover:bg-dark-lighter transition-colors duration-200
+               border border-transparent hover:border-dark-darker
+               focus:outline-none focus:ring-1 focus:ring-highlight/30;
+    }
+
+    .btn-action {
+        @apply block w-full py-2 px-4 text-center
+               bg-accent/10 text-accent-light rounded-lg
+               hover:bg-accent/20 transition-colors duration-200
+               focus:outline-none focus:ring-1 focus:ring-accent/30;
+    }
+    
+    .form-input {
+        @apply block w-full rounded-lg
+               border-dark-darker bg-dark-lighter
+               text-gray-200 placeholder-gray-500
+               focus:border-accent focus:ring-accent focus:ring-opacity-50
+               transition-colors duration-200;
+    }
+
+    .card {
+        @apply bg-dark-lighter rounded-lg border border-dark-darker
+               shadow-lg shadow-black/20
+               backdrop-blur-sm backdrop-filter;
+    }
+
+    .card-header {
+        @apply text-2xl font-semibold text-highlight mb-6;
+    }
+
+    .link {
+        @apply text-accent hover:text-accent-light 
+               underline decoration-transparent hover:decoration-accent-light/50
+               transition-all duration-200;
+    }
+
+    .nav-link {
+        @apply text-gray-300 hover:text-highlight 
+               transition-colors duration-200
+               px-3 py-2 rounded-md
+               hover:bg-highlight/5;
+    }
+}

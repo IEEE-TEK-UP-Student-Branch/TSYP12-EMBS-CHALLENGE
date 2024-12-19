@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Login - ment.AI{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="card p-8">
+        <h2 class="card-header">Welcome Back</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="bg-red-900/30 text-red-200 p-4 rounded-lg border border-red-800">
+                <p>The username or password you entered is incorrect. Please try again.</p>
+            </div>
+            {% endif %}
+            
+            <div class="space-y-2">
+                <label for="id_username" class="block text-sm font-medium text-gray-300">Username</label>
+                <input type="text" 
+                       name="username" 
+                       id="id_username" 
+                       required 
+                       class="form-input"
+                       autocomplete="username">
+            </div>
+            
+            <div class="space-y-2">
+                <label for="id_password" class="block text-sm font-medium text-gray-300">Password</label>
+                <input type="password" 
+                       name="password" 
+                       id="id_password" 
+                       required 
+                       class="form-input"
+                       autocomplete="current-password">
+            </div>
+            
+            <div>
+                <button type="submit" class="w-full btn-primary">
+                    Log In
+                </button>
+            </div>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-400">
+                Don't have an account? 
+                <a href="{% url 'register' %}" class="link">Sign up</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

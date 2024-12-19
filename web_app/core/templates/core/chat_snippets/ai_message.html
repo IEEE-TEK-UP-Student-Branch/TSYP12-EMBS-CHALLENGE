@@ -1,0 +1,28 @@
+<div class="message ai-message">
+    <div class="message-content">{{ message.content }}</div>
+    <div class="message-time">{{ message.created_at|date:"g:i A" }}</div>
+</div>
+
+<style>
+.ai-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px 0;
+}
+
+.ai-message .message-content {
+    background-color: #f8f9fa;
+    color: #343a40;
+    padding: 10px 15px;
+    border-radius: 15px 15px 15px 0;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.ai-message .message-time {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-top: 5px;
+}
+</style>

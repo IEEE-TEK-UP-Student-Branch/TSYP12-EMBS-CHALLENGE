@@ -1,0 +1,7 @@
+{% for message in messages %}
+    {% if message.is_user %}
+        {% include 'core/chat_snippets/user_message.html' with message=message.content timestamp=message.timestamp %}
+    {% else %}
+        {% include 'core/chat_snippets/ai_message.html' with message=message.content %}
+    {% endif %}
+{% endfor %}

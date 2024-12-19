@@ -1,0 +1,135 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+cleaned_pdfs/*
+therapy_reports/*
+downloaded_pdfs/*
+cleaned_texts/*
+chroma_db/*
+*.pdf
+*.webm
+web_app/reports/videos/*
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.env
+.venv
+env.bak/
+venv.bak/
+attempt2/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+.settings/
+web_app/reports/*
+# Project specific
+downloaded_pdfs/
+cleaned_texts/
+chroma_db/
+therapy_reports/
+*.pdf
+logs/
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+
+# Environment variables and secrets
+.env
+*.env
+secrets.json
+config.json
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+.nox/
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Backup files
+*.bak
+*.swp
+*.swo
+*~
+
+# Local development settings
+local_settings.py
+settings_local.py
+settings_dev.py
+
+# Database
+*.sqlite3
+*.db
+
+# Windows specific
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/

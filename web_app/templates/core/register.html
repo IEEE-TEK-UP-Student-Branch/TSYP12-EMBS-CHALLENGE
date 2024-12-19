@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - ment.AI{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="card p-8">
+        <h2 class="card-header">Create Your Account</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            {% if form.errors %}
+            <div class="bg-red-900/30 text-red-200 p-4 rounded-lg border border-red-800 space-y-2">
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <div class="space-y-2">
+                <label for="id_username" class="block text-sm font-medium text-gray-300">Username</label>
+                <input type="text" 
+                       name="username" 
+                       id="id_username" 
+                       required 
+                       class="form-input"
+                       autocomplete="username">
+                {% if form.username.help_text %}
+                    <p class="mt-1 text-sm text-gray-400">{{ form.username.help_text }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="space-y-2">
+                <label for="id_password1" class="block text-sm font-medium text-gray-300">Password</label>
+                <input type="password" 
+                       name="password1" 
+                       id="id_password1" 
+                       required 
+                       class="form-input"
+                       autocomplete="new-password">
+                {% if form.password1.help_text %}
+                    <div class="mt-1 text-sm text-gray-400 space-y-1">
+                        {{ form.password1.help_text|linebreaks }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="space-y-2">
+                <label for="id_password2" class="block text-sm font-medium text-gray-300">Confirm Password</label>
+                <input type="password" 
+                       name="password2" 
+                       id="id_password2" 
+                       required 
+                       class="form-input"
+                       autocomplete="new-password">
+                {% if form.password2.help_text %}
+                    <p class="mt-1 text-sm text-gray-400">{{ form.password2.help_text }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <button type="submit" class="w-full btn-primary">
+                    Create Account
+                </button>
+            </div>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <p class="text-sm text-gray-400">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="link">Log in</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

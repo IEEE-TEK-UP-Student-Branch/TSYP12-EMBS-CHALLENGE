@@ -1,0 +1,66 @@
+version: 1
+formatters:
+  default:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  detailed:
+    format: '%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: default
+    stream: ext://sys.stdout
+
+  file_general:
+    class: logging.FileHandler
+    level: INFO
+    formatter: default
+    filename: logs/scraper.log
+    mode: a
+
+  file_errors:
+    class: logging.FileHandler
+    level: ERROR
+    formatter: detailed
+    filename: logs/errors.log
+    mode: a
+
+  file_llm:
+    class: logging.FileHandler
+    level: DEBUG
+    formatter: detailed
+    filename: logs/llm_conversations.log
+    mode: a
+
+  file_downloads:
+    class: logging.FileHandler
+    level: INFO
+    formatter: default
+    filename: logs/downloads.log
+    mode: a
+
+loggers:
+  scraper:
+    level: INFO
+    handlers: [console, file_general]
+    propagate: no
+
+  scraper.llm:
+    level: DEBUG
+    handlers: [file_llm]
+    propagate: yes
+
+  scraper.downloads:
+    level: INFO
+    handlers: [file_downloads]
+    propagate: yes
+
+  scraper.errors:
+    level: ERROR
+    handlers: [file_errors]
+    propagate: yes
+
+root:
+  level: INFO
+  handlers: [console]
