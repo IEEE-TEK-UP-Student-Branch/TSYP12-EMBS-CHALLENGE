@@ -1,4 +1,4 @@
-# Mental Health PDF Scraper
+# Mental Health Web Application - ment.AI
 
 This project scrapes and downloads mental health-related PDF documents from the web using Google dorks. It uses the locally installed Mistral model through Ollama for agent intelligence.
 
@@ -118,3 +118,4 @@ project/
 - Only downloads PDF files from reputable sources (.edu, .org, .gov)
 - Implements rate limiting to avoid overwhelming sources
 - All operations are logged for monitoring and debugging
+- IMU Biometrics Dataset was taken from the **StresSense: Real-Time detection of stress-displaying behaviors** Research 
